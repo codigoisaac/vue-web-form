@@ -14,7 +14,13 @@
 
     <label>Skills</label> <br />
     <div class="skills">
-      <span v-for="skill in skills" :key="skill" class="pill">{{ skill }}</span>
+      <span
+        v-for="skill in skills"
+        :key="skill"
+        class="pill"
+        @click="deleteSkill(skill)"
+        >{{ skill }}</span
+      >
     </div>
     <input
       type="text"
@@ -58,6 +64,9 @@ export default {
         }
         this.tempSkill = "";
       }
+    },
+    deleteSkill(skill) {
+      this.skills.splice(this.skills.indexOf(skill), 1);
     },
   },
 };
