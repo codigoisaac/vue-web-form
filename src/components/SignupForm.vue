@@ -1,10 +1,11 @@
 <template>
-  <form>
+  <form @submit.prevent="handleSubmit">
     <label>Email</label>
     <input type="email" v-model="email" required />
 
     <label>Password</label>
     <input type="password" v-model="password" required />
+    <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
     <label>Role:</label>
     <select v-model="role">
@@ -33,12 +34,11 @@
       <input type="checkbox" v-model="terms" required />
       <label>Accept terms and conditions</label>
     </div>
-  </form>
 
-  <p>Email: {{ email }}</p>
-  <p>Password: {{ password }}</p>
-  <p>Role: {{ role }}</p>
-  <p>Terms accepted: {{ terms }}</p>
+    <div class="submit">
+      <button>Create Account</button>
+    </div>
+  </form>
 </template>
 
 <script>
@@ -51,22 +51,26 @@ export default {
       terms: false,
       tempSkill: "",
       skills: [],
+      passwordError: "",
     };
   },
   methods: {
     addSkill(e) {
-      if ((e.key === "," || e.key === "Enter") && this.tempSkill) {
-        const val =
-          e.key === "," ? this.tempSkill.slice(0, -1) : this.tempSkill;
-
-        if (!this.skills.includes(val) && val) {
-          this.skills.push(val);
+      if (e.key === "," && this.tempSkill) {
+        if (!this.skills.includes(this.tempSkill.slice(0, -1))) {
+          this.skills.push(this.tempSkill.slice(0, -1));
         }
         this.tempSkill = "";
       }
     },
     deleteSkill(skill) {
       this.skills.splice(this.skills.indexOf(skill), 1);
+    },
+    handleSubmit() {
+      this.passwordError =
+        this.password.length < 6
+          ? "Password must be at least 6 characters long"
+          : "";
     },
   },
 };
@@ -121,5 +125,22 @@ input[type="checkbox"] {
 }
 .skills {
   margin: 0 0 10px 0;
+}
+button {
+  background: #0b6dff;
+  border: 0;
+  padding: 10px 20px;
+  margin-top: 20px;
+  color: white;
+  border-radius: 20px;
+}
+.submit {
+  text-align: center;
+}
+.error {
+  color: #ff0062;
+  margin-top: 10px;
+  font-size: 0.8em;
+  font-weight: bold;
 }
 </style>
